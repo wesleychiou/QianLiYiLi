@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- 深色背景漸層 -->
+    <radialGradient id="bgGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#1a2238"/>
+      <stop offset="100%" stop-color="#090c13"/>
+    </radialGradient>
+    <!-- 金色漸層 -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e8c97a"/>
+      <stop offset="40%" stop-color="#c9a84c"/>
+      <stop offset="100%" stop-color="#7a6228"/>
+    </linearGradient>
+    <!-- 金色光暈 -->
+    <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+    </radialGradient>
+    <!-- 圓形裁切 -->
+    <clipPath id="roundedRect">
+      <rect x="0" y="0" width="1024" height="1024" rx="225" ry="225"/>
+    </clipPath>
+    <!-- 字體陰影 -->
+    <filter id="textGlow">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="goldShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#c9a84c" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <g clip-path="url(#roundedRect)">
+    <!-- 背景 -->
+    <rect width="1024" height="1024" fill="url(#bgGrad)"/>
+
+    <!-- 光暈效果 -->
+    <circle cx="512" cy="480" r="420" fill="url(#glowGrad)"/>
+
+    <!-- 外圓環 -->
+    <circle cx="512" cy="512" r="460" fill="none" stroke="url(#goldGrad)" stroke-width="3" opacity="0.5"/>
+    <circle cx="512" cy="512" r="450" fill="none" stroke="url(#goldGrad)" stroke-width="1" opacity="0.3"/>
+
+    <!-- 八卦外圈裝飾（64個小點） -->
+    <g opacity="0.2">
+      <circle cx="512" cy="512" r="430" fill="none" stroke="#c9a84c" stroke-width="1" stroke-dasharray="6 27.3"/>
+    </g>
+
+    <!-- 八個方位的卦象（簡化為三線組） -->
+    <!-- 乾 ☰ 正上 -->
+    <g transform="translate(512,100)" fill="#c9a84c" opacity="0.85">
+      <rect x="-24" y="-6" width="48" height="6" rx="3"/>
+      <rect x="-24" y="5" width="48" height="6" rx="3"/>
+      <rect x="-24" y="16" width="48" height="6" rx="3"/>
+    </g>
+    <!-- 坤 ☷ 正下 -->
+    <g transform="translate(512,924)" fill="#c9a84c" opacity="0.85">
+      <rect x="-24" y="-6" width="20" height="6" rx="3"/><rect x="4" y="-6" width="20" height="6" rx="3"/>
+      <rect x="-24" y="5" width="20" height="6" rx="3"/><rect x="4" y="5" width="20" height="6" rx="3"/>
+      <rect x="-24" y="16" width="20" height="6" rx="3"/><rect x="4" y="16" width="20" height="6" rx="3"/>
+    </g>
+    <!-- 離 ☲ 正右 -->
+    <g transform="translate(924,512)" fill="#c9a84c" opacity="0.85">
+      <rect x="-24" y="-6" width="48" height="6" rx="3"/>
+      <rect x="-24" y="5" width="20" height="6" rx="3"/><rect x="4" y="5" width="20" height="6" rx="3"/>
+      <rect x="-24" y="16" width="48" height="6" rx="3"/>
+    </g>
+    <!-- 坎 ☵ 正左 -->
+    <g transform="translate(100,512)" fill="#c9a84c" opacity="0.85">
+      <rect x="-24" y="-6" width="20" height="6" rx="3"/><rect x="4" y="-6" width="20" height="6" rx="3"/>
+      <rect x="-24" y="5" width="48" height="6" rx="3"/>
+      <rect x="-24" y="16" width="20" height="6" rx="3"/><rect x="4" y="16" width="20" height="6" rx="3"/>
+    </g>
+    <!-- 震 ☳ 左上 -->
+    <g transform="translate(190,190) rotate(-45)" fill="#c9a84c" opacity="0.7">
+      <rect x="-24" y="-6" width="48" height="6" rx="3"/>
+      <rect x="-24" y="5" width="20" height="6" rx="3"/><rect x="4" y="5" width="20" height="6" rx="3"/>
+      <rect x="-24" y="16" width="20" height="6" rx="3"/><rect x="4" y="16" width="20" height="6" rx="3"/>
+    </g>
+    <!-- 巽 ☴ 右上 -->
+    <g transform="translate(834,190) rotate(45)" fill="#c9a84c" opacity="0.7">
+      <rect x="-24" y="-6" width="20" height="6" rx="3"/><rect x="4" y="-6" width="20" height="6" rx="3"/>
+      <rect x="-24" y="5" width="48" height="6" rx="3"/>
+      <rect x="-24" y="16" width="48" height="6" rx="3"/>
+    </g>
+    <!-- 艮 ☶ 左下 -->
+    <g transform="translate(190,834) rotate(45)" fill="#c9a84c" opacity="0.7">
+      <rect x="-24" y="-6" width="48" height="6" rx="3"/>
+      <rect x="-24" y="5" width="20" height="6" rx="3"/><rect x="4" y="5" width="20" height="6" rx="3"/>
+      <rect x="-24" y="16" width="48" height="6" rx="3"/>
+    </g>
+    <!-- 兌 ☱ 右下 -->
+    <g transform="translate(834,834) rotate(-45)" fill="#c9a84c" opacity="0.7">
+      <rect x="-24" y="-6" width="48" height="6" rx="3"/>
+      <rect x="-24" y="5" width="48" height="6" rx="3"/>
+      <rect x="-24" y="16" width="20" height="6" rx="3"/><rect x="4" y="16" width="20" height="6" rx="3"/>
+    </g>
+
+    <!-- 中間圓形底盤 -->
+    <circle cx="512" cy="512" r="300" fill="#0f1520" stroke="url(#goldGrad)" stroke-width="2.5"/>
+    <circle cx="512" cy="512" r="290" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.3"/>
+
+    <!-- 太極魚眼（陰陽） -->
+    <!-- 陽半（右白） -->
+    <path d="M512,222 A290,290 0 0,1 512,802 A145,145 0 0,1 512,512 A145,145 0 0,0 512,222 Z" fill="#c9a84c" opacity="0.07"/>
+
+    <!-- 中心「曆」字 -->
+    <text
+      x="512" y="600"
+      text-anchor="middle"
+      font-family="'Noto Serif TC', 'STSong', 'SimSun', serif"
+      font-size="340"
+      font-weight="900"
+      fill="url(#goldGrad)"
+      filter="url(#goldShadow)"
+      letter-spacing="-5">曆</text>
+
+    <!-- 「千里易」小字 -->
+    <text
+      x="512" y="680"
+      text-anchor="middle"
+      font-family="'Noto Serif TC', 'STSong', 'SimSun', serif"
+      font-size="72"
+      font-weight="600"
+      fill="#c9a84c"
+      opacity="0.9"
+      letter-spacing="18">千里易曆</text>
+
+    <!-- 底部細節線 -->
+    <line x1="362" y1="700" x2="662" y2="700" stroke="url(#goldGrad)" stroke-width="1.5" opacity="0.5"/>
+
+    <!-- 外框雙環 -->
+    <rect x="12" y="12" width="1000" height="1000" rx="218" ry="218" fill="none" stroke="url(#goldGrad)" stroke-width="4" opacity="0.4"/>
+    <rect x="22" y="22" width="980" height="980" rx="210" ry="210" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" opacity="0.2"/>
+  </g>
+</svg>
