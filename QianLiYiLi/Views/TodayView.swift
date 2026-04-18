@@ -1,8 +1,13 @@
 import SwiftUI
 
 struct TodayView: View {
-    @State private var now = Date()
+    @State private var now = Date()          // 實際當前時間（供時辰高亮用）
+    @State private var viewDate = Date()     // 目前查看的日期
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+
+    private var isViewingToday: Bool {
+        Calendar.current.isDateInToday(viewDate)
+    }
 
     var body: some View {
         ScrollView {
@@ -18,24 +23,57 @@ struct TodayView: View {
             .padding(.bottom, 20)
         }
         .background(Theme.bgDeep.ignoresSafeArea())
-        .onReceive(timer) { _ in now = Date() }
+        .onReceive(timer) { t in
+            now = t
+            if isViewingToday { viewDate = t }
+        }
     }
 
     // MARK: - Date Hero
 
     private var dateHeroSection: some View {
-        let ld  = gregToLunar(now)
+        let ld  = gregToLunar(viewDate)
         let cal = Calendar(identifier: .gregorian)
         let yg  = yearGZ(ld.year)
-        let mg  = monthGZ(now)
-        let dg  = dayGZ(now)
+        let mg  = monthGZ(viewDate)
+        let dg  = dayGZ(viewDate)
         let weekdays = ["日","一","二","三","四","五","六"]
-        let wd  = weekdays[cal.component(.weekday, from: now) - 1]
-        let moon = moonPhaseText(moonPhaseAt(dateToJDE(now)))
-        let term = getCurrentTerm(now).current
+        let wd  = weekdays[cal.component(.weekday, from: viewDate) - 1]
+        let moon = moonPhaseText(moonPhaseAt(dateToJDE(viewDate)))
+        let term = getCurrentTerm(viewDate).current
 
         return VStack(spacing: 8) {
-            Text("\(cal.component(.year, from: now))年\(cal.component(.month, from: now))月\(cal.component(.day, from: now))日 星期\(wd)")
+            // 上一日 / 回今日 / 下一日
+            HStack(spacing: 16) {
+                Button(action: { changeDay(-1) }) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(Theme.gold)
+                        .frame(width: 36, height: 36)
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Theme.gold.opacity(0.3), lineWidth: 1))
+                }
+                if !isViewingToday {
+                    Button(action: { viewDate = Calendar.current.startOfDay(for: Date()) }) {
+                        Text("回今日")
+                            .font(.system(size: 12))
+                            .foregroundColor(Theme.gold)
+                            .padding(.horizontal, 10).padding(.vertical, 4)
+                            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Theme.goldDim, lineWidth: 1))
+                    }
+                } else {
+                    Spacer().frame(width: 60)
+                }
+                Button(action: { changeDay(1) }) {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(Theme.gold)
+                        .frame(width: 36, height: 36)
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Theme.gold.opacity(0.3), lineWidth: 1))
+                }
+            }
+            .padding(.top, 8)
+
+            Text("\(cal.component(.year, from: viewDate))年\(cal.component(.month, from: viewDate))月\(cal.component(.day, from: viewDate))日 星期\(wd)")
                 .font(.system(size: 14))
                 .foregroundColor(Theme.textSub)
 
@@ -61,16 +99,19 @@ struct TodayView: View {
                 }
             }
         }
-        .padding(.top, 8)
+    }
+
+    private func changeDay(_ offset: Int) {
+        viewDate = Calendar.current.date(byAdding: .day, value: offset, to: viewDate) ?? viewDate
     }
 
     // MARK: - Four Pillars
 
     private var fourPillarsCard: some View {
-        let ld = gregToLunar(now)
+        let ld = gregToLunar(viewDate)
         let yg = yearGZ(ld.year)
-        let mg = monthGZ(now)
-        let dg = dayGZ(now)
+        let mg = monthGZ(viewDate)
+        let dg = dayGZ(viewDate)
         let hg = hourGZ(date: now, dayStem: dg.stem)
         let pillars: [(String, GanZhi, String)] = [
             ("年柱", yg, CCC.zodiac[yg.branch]),
@@ -93,7 +134,7 @@ struct TodayView: View {
     // MARK: - 宜忌
 
     private var yijiCard: some View {
-        let jz = getJianzhu(now)
+        let jz = getJianzhu(viewDate)
         return CardView {
             VStack(alignment: .leading, spacing: 12) {
                 SectionHeaderView(title: "今日宜忌")
@@ -114,10 +155,10 @@ struct TodayView: View {
     // MARK: - Day Info
 
     private var dayInfoCard: some View {
-        let dg = dayGZ(now)
-        let jz = getJianzhu(now)
-        let chong = getChong(now)
-        let suisha = getSuisha(now)
+        let dg = dayGZ(viewDate)
+        let jz = getJianzhu(viewDate)
+        let chong = getChong(viewDate)
+        let suisha = getSuisha(viewDate)
         return CardView {
             VStack(alignment: .leading, spacing: 0) {
                 SectionHeaderView(title: "日神資訊")
@@ -139,7 +180,7 @@ struct TodayView: View {
     }
 
     private func getNayinForToday() -> String {
-        let dg = dayGZ(now)
+        let dg = dayGZ(viewDate)
         return CCC.nayinNames[dg.idx / 2]
     }
 
@@ -155,7 +196,7 @@ struct TodayView: View {
     // MARK: - 彭祖
 
     private var pengzuCard: some View {
-        let pz = getPengzu(now)
+        let pz = getPengzu(viewDate)
         return CardView {
             VStack(alignment: .leading, spacing: 10) {
                 SectionHeaderView(title: "彭祖百忌")
@@ -180,9 +221,10 @@ struct TodayView: View {
     // MARK: - 時辰
 
     private var shichenCard: some View {
-        let dg = dayGZ(now)
+        let dg = dayGZ(viewDate)
         let cal = Calendar(identifier: .gregorian)
-        let h = cal.component(.hour, from: now)
+        // 時辰高亮：查看今日用當前時間，查看其他日不高亮
+        let h = isViewingToday ? cal.component(.hour, from: now) : -1
         let curBranch = h < 1 ? 0 : ((h + 1) / 2) % 12
         return CardView {
             VStack(alignment: .leading, spacing: 12) {
@@ -192,9 +234,9 @@ struct TodayView: View {
                         let startStem = (dg.stem % 5) * 2
                         let sIdx = (startStem + i) % 10
                         let gz = CCC.stems[sIdx] + CCC.branch[i]
-                        let fortune = getShichenFortune(date: now, hourBranch: i)
+                        let fortune = getShichenFortune(date: viewDate, hourBranch: i)
                         let t = CCC.shichenHours[i]
-                        let isCur = i == curBranch
+                        let isCur = isViewingToday && i == curBranch
                         ShichenCell(gz: gz, timeRange: "\(String(format: "%02d", t.0 % 24))~\(String(format: "%02d", t.1 % 24))時",
                                     fortune: fortune, isCurrent: isCur)
                     }
