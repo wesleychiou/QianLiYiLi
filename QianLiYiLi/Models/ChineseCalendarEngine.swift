@@ -298,7 +298,7 @@ func dayGZ(_ date: Date) -> GanZhi {
     let d = cal.component(.day, from: date)
     let jd = Int(gregToJDE(y, m, d) + 0.5)
     let ref = Int(gregToJDE(2000, 1, 1) + 0.5)
-    let idx = ((jd - ref + 15) % 60 + 60) % 60
+    let idx = ((jd - ref + 54) % 60 + 60) % 60
     return GanZhi(stem: idx % 10, branch: idx % 12, gz: CCC.stems[idx % 10] + CCC.branch[idx % 12], idx: idx)
 }
 
