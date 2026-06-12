@@ -129,8 +129,7 @@ struct SolarTermsView: View {
     // MARK: - Helpers
 
     private func formatDate(_ d: Date) -> String {
-        let cal = Calendar(identifier: .gregorian)
-        let c = cal.dateComponents([.year,.month,.day,.hour,.minute], from: d)
+        let c = tpeCal.dateComponents([.year,.month,.day,.hour,.minute], from: d)
         return String(format: "%d年%02d月%02d日 %02d:%02d", c.year!, c.month!, c.day!, c.hour!, c.minute!)
     }
 
@@ -157,7 +156,7 @@ struct TermRow: View {
     let now: Date
 
     private func formatDate(_ d: Date) -> String {
-        let c = Calendar(identifier: .gregorian).dateComponents([.month,.day,.hour,.minute], from: d)
+        let c = tpeCal.dateComponents([.month,.day,.hour,.minute], from: d)
         return String(format: "%02d/%02d %02d:%02d", c.month!, c.day!, c.hour!, c.minute!)
     }
     private var countdown: String {

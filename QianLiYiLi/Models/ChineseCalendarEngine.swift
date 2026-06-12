@@ -247,7 +247,7 @@ func gregToLunar(_ date: Date) -> LunarDate {
                 let day = Int(floor(jde - mStart)) + 1
                 let monthDays = Int((months[i + 1].startJDE - m.startJDE).rounded())
                 let month1 = months.first { $0.num == 1 && !$0.isLeap }
-                let chYear = (month1 != nil && jde >= month1!.startJDE + 8.0/24.0) ? gy : gy - 1
+                let chYear = (month1 != nil && jde >= month1!.startJDE + 8.0/24.0) ? wy + 1 : wy
                 return LunarDate(year: chYear, month: m.num, day: day,
                                   isLeap: m.isLeap, monthDays: monthDays)
             }
@@ -279,7 +279,7 @@ func monthGZ(_ date: Date) -> GanZhi {
     var mBranch = 2
     for i in stride(from: jieAngles.count - 1, through: 0, by: -1) {
         let d = normDeg(lon - jieAngles[i])
-        if d < 35 { mBranch = jieBranch[i]; break }
+        if d < 30 { mBranch = jieBranch[i]; break }
     }
     let cal = Calendar(identifier: .gregorian)
     let gy = cal.component(.year, from: date)
@@ -410,20 +410,22 @@ struct SolarTerm {
 
 private var termCache: [Int: [SolarTerm]] = [:]
 
+let tpeCal: Calendar = {
+    var c = Calendar(identifier: .gregorian)
+    c.timeZone = TimeZone(identifier: "Asia/Taipei")!
+    return c
+}()
+
 func getSolarTermsForYear(_ year: Int) -> [SolarTerm] {
     if let cached = termCache[year] { return cached }
     var terms: [SolarTerm] = []
-    let cal = Calendar(identifier: .gregorian)
     for ti in 0..<24 {
         let angle = CCC.termAngles[ti]
         for y in [year - 1, year, year + 1] {
             let approx = termApprox(y, angle)
             let jde = findTermJDE(approx: approx, target: angle)
-            let raw = jdeToDate(jde + 8.0/24.0)
-            if cal.component(.year, from: raw) == year {
-                var comps = cal.dateComponents([.year,.month,.day,.hour,.minute,.second], from: raw)
-                comps.timeZone = TimeZone(identifier: "Asia/Taipei")
-                let d = cal.date(from: comps) ?? raw
+            let d = jdeToDate(jde)
+            if tpeCal.component(.year, from: d) == year {
                 terms.append(SolarTerm(name: CCC.termNames[ti], angle: angle, date: d, idx: ti))
             }
         }
