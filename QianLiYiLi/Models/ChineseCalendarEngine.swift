@@ -372,7 +372,7 @@ func getChong(_ date: Date) -> String {
 func getSuisha(_ date: Date) -> String {
     let dg = dayGZ(date)
     let sha = ["南","西","北","東"]
-    return sha[dg.branch % 4] + "方"
+    return sha[((dg.branch + 1) % 12) / 3] + "方"
 }
 
 // MARK: - 納音
