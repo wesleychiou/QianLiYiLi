@@ -99,7 +99,7 @@ struct MonthCalendarView: View {
                 let moonP = moonPhaseAt(dateToJDE(date))
                 let moonIcon: String = moonP < 0.04 || moonP > 0.96 ? "🌑" : moonP > 0.46 && moonP < 0.54 ? "🌕" : ""
                 CalDayCell(
-                    day: d, lunarLabel: ld.day == 1 ? CCC.lunarMonths[ld.month - 1] : CCC.lunarDays[ld.day - 1],
+                    day: d, lunarLabel: ld.day == 1 ? (ld.isLeap ? "閏" : "") + CCC.lunarMonths[ld.month - 1] : CCC.lunarDays[ld.day - 1],
                     termName: termName, moonIcon: moonIcon, jzLuck: jz.luck,
                     isToday: isToday, isSelected: isSel, isSunday: dow == 0, isSaturday: dow == 6
                 )

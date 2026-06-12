@@ -96,7 +96,6 @@ struct SolarTermsView: View {
 
     private var allTermsCard: some View {
         let terms = getSolarTermsForYear(year)
-        let termByIdx = Dictionary(uniqueKeysWithValues: terms.map { ($0.idx, $0) })
 
         return CardView {
             VStack(alignment: .leading, spacing: 16) {

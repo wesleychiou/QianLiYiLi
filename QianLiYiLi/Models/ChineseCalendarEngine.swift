@@ -450,6 +450,9 @@ func getCurrentTerm(_ date: Date) -> CurrentTermInfo {
         if t.date <= date { cur = t }
         else if next == nil { next = t }
     }
+    if cur == nil {
+        cur = getSolarTermsForYear(year - 1).last
+    }
     if next == nil {
         let ny = getSolarTermsForYear(year + 1)
         next = ny.first
