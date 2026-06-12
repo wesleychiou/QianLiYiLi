@@ -237,7 +237,7 @@ func gregToLunar(_ date: Date) -> LunarDate {
     let gy = cal.component(.year, from: date)
     let jde = dateToJDE(date) + 8.0/24.0
 
-    for wy in [gy - 1, gy - 2] {
+    for wy in [gy - 1, gy] {
         let months = buildLunarYear(wy)
         for i in 0..<(months.count - 1) {
             let m = months[i]
@@ -283,7 +283,7 @@ func monthGZ(_ date: Date) -> GanZhi {
     }
     let cal = Calendar(identifier: .gregorian)
     let gy = cal.component(.year, from: date)
-    let actualYear = (lon >= 315 || lon < 15) ? gy - 1 : gy
+    let actualYear = (lon >= 280 && lon < 315) ? gy - 1 : gy
     let ays = yearGZ(actualYear).stem
     let startStem = (ays % 5 + 1) * 2 % 10
     let mOffset = (mBranch - 2 + 12) % 12
@@ -358,7 +358,7 @@ func getShichenFortune(date: Date, hourBranch: Int) -> ShichenFortune {
     let lucky = CCC.luckyHours[dg.branch]
     if lucky.prefix(2).contains(hourBranch) { return .excellent }
     if lucky.contains(hourBranch) { return .good }
-    return hourBranch == dg.branch ? .bad : .neutral
+    return hourBranch == (dg.branch + 6) % 12 ? .bad : .neutral
 }
 
 // MARK: - 方位
