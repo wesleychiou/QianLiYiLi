@@ -2,7 +2,8 @@ import SwiftUI
 
 struct SolarTermsView: View {
     @State private var year = Calendar(identifier: .gregorian).component(.year, from: Date())
-    private let now = Date()
+    @State private var now = Date()
+    private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
 
     private let seasonGroups: [(String, String, [Int])] = [
         ("春", "spring",  [2,3,4,5,6,7]),
@@ -22,6 +23,7 @@ struct SolarTermsView: View {
             .padding(.bottom, 20)
         }
         .background(Theme.bgDeep.ignoresSafeArea())
+        .onReceive(timer) { t in now = t }
     }
 
     // MARK: - Current Term
